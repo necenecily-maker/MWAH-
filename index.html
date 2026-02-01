@@ -1,99 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>💖 Just One Question</title>
+<meta charset="UTF-8">
+<title>I Love You ❤️</title>
 
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #0f0f1a;
-      font-family: Arial, sans-serif;
-    }
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: black;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+  }
 
-    .box {
-      position: relative;
-      width: 350px;
-      height: 250px;
-      border-radius: 16px;
-      border: 2px solid #ffffff22;
-      text-align: center;
-    }
+  canvas {
+    display: block;
+  }
 
-    h2 {
-      color: white;
-      margin-top: 30px;
-    }
-
-    button {
-      position: absolute;
-      padding: 12px 26px;
-      font-size: 18px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-    }
-
-    .yes {
-      background: #4caf50;
-      color: white;
-      left: 50px;
-      bottom: 30px;
-    }
-
-    .no {
-      background: #f44336;
-      color: white;
-      left: 210px;
-      bottom: 30px;
-    }
-  </style>
+  .hint {
+    position: fixed;
+    bottom: 14px;
+    width: 100%;
+    text-align: center;
+    color: #ea80b0;
+    font-family: Arial, sans-serif;
+    opacity: 0.7;
+    font-size: 14px;
+  }
+</style>
 </head>
 
 <body>
 
-  <div class="box">
-    <h2>Do you love me? 💖</h2>
-    <button class="yes" onclick="yesClicked()">YES</button>
-    <button class="no" onclick="moveNo()" ontouchstart="moveNo()">NO</button>
-  </div>
+<canvas id="canvas"></canvas>
+<div class="hint">I love you ❤️</div>
 
-  <script>
-    function moveNo() {
-      const noBtn = document.querySelector('.no');
-      const box = document.querySelector('.box');
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-      const maxX = box.clientWidth - noBtn.offsetWidth;
-      const maxY = box.clientHeight - noBtn.offsetHeight;
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
 
-      const x = Math.random() * maxX;
-      const y = Math.random() * maxY;
+ctx.font = "16px Arial";
+ctx.textAlign = "center";
+ctx.textBaseline = "middle";
 
-      noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
-    }
+let t = 0;
 
-    function yesClicked() {
-      document.body.innerHTML = `
-        <div style="
-          height:100vh;
-          display:flex;
-          justify-content:center;
-          align-items:center;
-          background:#0f0f1a;
-          color:white;
-          font-size:28px;
-          text-align:center;
-        ">
-          💖 I knew it. You just made my day 💖
-        </div>
-      `;
-    }
-  </script>
+function drawHeart() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const scale = Math.min(canvas.width, canvas.height) / 32;
+
+  for (let i = 0; i < 220; i++) {
+    const a = i * 0.12 + t;
+
+    // Heart parametric equation
+    const x = 16 * Math.pow(Math.sin(a), 3);
+    const y =
+      13 * Math.cos(a)
+      - 5 * Math.cos(2 * a)
+      - 2 * Math.cos(3 * a)
+      - Math.cos(4 * a);
+
+    const px = cx + x * scale;
+    const py = cy - y * scale;
+
+    ctx.fillStyle = "rgba(234,128,176,0.85)";
+    ctx.shadowColor = "#fff";
+    ctx.shadowBlur = 10;
+
+    ctx.fillText("I love you", px, py);
+  }
+
+  t += 0.02;
+  requestAnimationFrame(drawHeart);
+}
+
+drawHeart();
+</script>
 
 </body>
 </html>
